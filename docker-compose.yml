@@ -1,0 +1,18 @@
+version: '3.14'
+services:
+  web:
+    build: .
+    command: ./manage.py runserver 0.0.0.0:8000
+    ports:
+      - 8000:8000
+  postgres:
+     image: postgres:15.2-bullseye
+     environment:
+       POSTGRES_DB: "iliyadb"
+       POSTGRES_USER: "iliyapguser"
+       POSTGRES_PASSWORD: "159730pg"
+       HOST: "0.0.0.0"
+     volumes:
+       - .:/docker-entrypoint-initdb.d
+     ports:
+       - "5432:5432"

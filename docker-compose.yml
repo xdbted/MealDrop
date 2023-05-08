@@ -1,18 +1,29 @@
 version: '3.14'
 services:
-  web:
-    build: .
-    command: ./manage.py runserver 0.0.0.0:8000
+  django:
+    container_name: django
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile
+    entrypoint:
+      - ./entrypoint.sh
     ports:
-      - 8000:8000
+      - '8000:8000'
+    env_file:
+      - .env
+    depends_on:
+      - postgres
+    tty: true
   postgres:
-     image: postgres:15.2-bullseye
-     environment:
-       POSTGRES_DB: "iliyadb"
-       POSTGRES_USER: "iliyapguser"
-       POSTGRES_PASSWORD: "159730pg"
-       HOST: "0.0.0.0"
-     volumes:
-       - .:/docker-entrypoint-initdb.d
-     ports:
-       - "5432:5432"
+    container_name: postgres
+    image: postgres:13.3-alpine
+    ports:
+      - '5432:5432'
+    env_file:
+      - .env
+    tty: true
+    logging:
+      driver: none
+volumes:
+  postgres:
